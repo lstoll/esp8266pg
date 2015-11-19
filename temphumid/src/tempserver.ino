@@ -1,15 +1,31 @@
 #include <ESP8266WiFi.h>
 #include <WiFiClient.h>
 #include <ESP8266WebServer.h>
+#include <Wire.h>
+#include <Adafruit_HDC1000.h>
+
 #include "tempserver.h"
 
 ESP8266WebServer server(80);
 
+Adafruit_HDC1000 hdc = Adafruit_HDC1000();
+
 const int led = 5;
+String errMsg = "";
+bool sensErr = false;
 
 void handleRoot() {
   digitalWrite(led, 0);
-  server.send(200, "text/plain", "hello from esp8266!");
+
+  if (sensErr == true) {
+     server.send(200, "text/plain", errMsg);
+  } else {
+    String temp = String(hdc.readTemperature());
+    String hum = String(hdc.readHumidity());
+    server.send(200, "text/plain", "temp:" + temp + ",humidity:" + hum);
+  }
+
+
   digitalWrite(led, 1);
 }
 
@@ -33,6 +49,13 @@ void handleNotFound(){
 void setup(void){
   pinMode(led, OUTPUT);
   digitalWrite(led, 0);
+
+  Wire.begin(sdaPort, sclPort);
+
+  if (!hdc.begin()) {
+    sensErr = true;
+    errMsg = "Couldn't find sensor!";
+  }
 
   WiFi.hostname(wifiHostname);
   WiFi.begin(ssid, password);
