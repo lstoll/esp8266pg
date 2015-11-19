@@ -2,3 +2,6 @@ const char* ssid = "SSID";
 const char* password = "PW";
 
 const char* wifiHostname = "temp8266";
+
+const int sdaPort = 13;
+const int sclPort = 12;
