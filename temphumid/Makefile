@@ -1,7 +1,7 @@
 .PHONY: clean upload
 
 
-.pioenvs/esp01/firmware.bin: src/flash.ino
+.pioenvs/esp01/firmware.bin: src/tempserver.ino src/tempserver.h
 	platformio run
 
 clean:
