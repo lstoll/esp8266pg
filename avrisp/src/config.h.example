@@ -1,0 +1,5 @@
+const char* host = "esp8266-avrisp";
+const char* ssid = "**********";
+const char* pass = "**********";
+const uint16_t port = 328;
+const uint8_t reset_pin = 5;
